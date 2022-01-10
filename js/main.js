@@ -16,8 +16,21 @@ var noise = x=>{
     return lerp(perm[Math.floor(x)], perm[Math.ceil(x)], x - Math.floor(x));
 }
 
+var player = new function(){
+    this.x = c.width/2;
+    this.y = 0;
+    this.rot = 0;
+
+    this.img = new Image ();
+    this.img.src = "./img/bike.png";
+    this.draw = function(){
+        ctx.drawImage(this.img, this.x, 100);
+    }
+}
+
 var t = 0;
 function loop(){
+    t +=1;
     ctx.fillStyle = "#19f";
     ctx.fillRect(0,0,c.width, c.height);
 
@@ -29,6 +42,8 @@ function loop(){
   
     ctx.lineTo(c.width, c.height);
     ctx.fill();
+
+    player.draw();
     requestAnimationFrame(loop);
 }
 
