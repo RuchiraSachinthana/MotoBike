@@ -3,4 +3,4 @@
 
  Link - https://ruchirasachinthana.github.io/MotoBike/index.html
 
- ![Screenshot]()
+ ![Screenshot](https://raw.githubusercontent.com/RuchiraSachinthana/MotoBike/main/img/Capture.JPG)
