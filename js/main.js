@@ -23,30 +23,48 @@ var player = new function(){
     this.y = 0;
     this.ySpeed = 0;
     this.rot = 0;
+    this.rSpeed = 0;
 
     this.img = new Image ();
     this.img.src = "./img/bike.png";
     this.draw = function(){
 
         var p1 = c.height - noise(t + this.x)* 0.25;
-        if (p1 -15 > this.y) {
-            this.ySpeed -= 0.1;
-        } else {
-            this.y = p1 - 15;
-            this.ySpeed = 0 ;
-        }
-        this.y -= this.ySpeed;
+        var p2 = c.height - noise(t+5 + this.x)* 0.25;
 
+        var grounded = 0;
+        if (p1 -15 > this.y) {
+            this.ySpeed += 0.1;
+        } else {
+           
+            this.ySpeed -= this.y -(p1-15) ;
+            this.y = p1 - 15;
+            grounded = 1;
+        }
+        var angle = Math.atan2((p2 -15) - this.y, (this.x+5) - this.x);
+        this.y += this.ySpeed;
+
+        if(grounded){
+            this.rot -= (this.rot - angle) * 0.5;
+            this.rSpeed = this.rSpeed - (angle - this.rot);
+        }
+
+        this.rSpeed += (k.ArrowLeft -k.ArrwoRigth) * 0.5;
+        this.rot -= this.rSpeed * 0.1;
         ctx.save();
         ctx.translate(this.x, this.y);
+        this.rotate(this.rot);
         ctx.drawImage(this.img, -15, -15, 30, 30);
         ctx.restore();
     }
 }
 
 var t = 0;
+var speed = 0;
+var k = {ArrowUp:0, ArrowDown:0, ArrowLeft:0, ArrwoRigth:0};
 function loop(){
-    t +=5;
+    speed -= (speed - (k.ArrowUp - k.ArrowDown)) * 0.01;
+    t +=5 * speed;
     ctx.fillStyle = "#19f";
     ctx.fillRect(0,0,c.width, c.height);
 
@@ -62,6 +80,9 @@ function loop(){
     player.draw();
     requestAnimationFrame(loop);
 }
+
+onkeydown = d=> k[d.key] = 1;
+onkeydown = d=> k[d.key] = 0;
 
 loop();
 
