@@ -1,9 +1,9 @@
 var c = document.createElement("canvas");
 var ctx = c.getContext("2d");
-c .width = 500;
-c.height = 350;
+c .width = 600;
+c.height = 400;
 c.tabindex = 0;
-c.setAttribute('style', "position: absolute;  left: 60%;margin-left:-400px; top: 25%; margin-top:50px;");
+c.setAttribute('style', "position: absolute;  left: 57%;margin-left:-400px; top: 20%; margin-top:50px;");
 document.body.appendChild(c);
 
 var perm = [];
@@ -33,27 +33,40 @@ var player = new function(){
         var p2 = c.height - noise(t+5 + this.x)* 0.25;
 
         var grounded = 0;
-        if (p1 -15 > this.y) {
+        if (p1 - 15 > this.y) {
             this.ySpeed += 0.1;
         } else {
            
-            this.ySpeed -= this.y -(p1-15) ;
+            this.ySpeed -= this.y - (p1-15) ;
             this.y = p1 - 15;
             grounded = 1;
         }
+
+        if(!playing || grounded && Math.abs(this.rot) > Math.PI * 0.5)  {
+            playing  = false;
+            this.rSpeed = 5;
+            k.ArrowUp = 1;
+            this.x -= speed * 5;
+
+        }
+
         var angle = Math.atan2((p2 -15) - this.y, (this.x+5) - this.x);
         this.y += this.ySpeed;
 
-        if(grounded){
+        if( grounded && playing ){
             this.rot -= (this.rot - angle) * 0.5;
             this.rSpeed = this.rSpeed - (angle - this.rot);
         }
 
-        this.rSpeed += (k.ArrowLeft -k.ArrwoRigth) * 0.5;
+        this.rSpeed += (k.ArrowLeft - k.ArrowRight) * 0.05;
         this.rot -= this.rSpeed * 0.1;
+
+        if (this.rot > Math.PI) this.rot = -Math.PI;
+        if (this.rot < -Math.PI) this.rot = Math.PI;
+
         ctx.save();
         ctx.translate(this.x, this.y);
-        this.rotate(this.rot);
+        ctx.rotate(this.rot);
         ctx.drawImage(this.img, -15, -15, 30, 30);
         ctx.restore();
     }
@@ -61,10 +74,11 @@ var player = new function(){
 
 var t = 0;
 var speed = 0;
-var k = {ArrowUp:0, ArrowDown:0, ArrowLeft:0, ArrwoRigth:0};
+var playing = true;
+var k = {ArrowUp:0, ArrowDown:0, ArrowLeft:0, ArrowRight:0};
 function loop(){
     speed -= (speed - (k.ArrowUp - k.ArrowDown)) * 0.01;
-    t +=5 * speed;
+    t += 10 * speed;
     ctx.fillStyle = "#19f";
     ctx.fillRect(0,0,c.width, c.height);
 
@@ -82,7 +96,7 @@ function loop(){
 }
 
 onkeydown = d=> k[d.key] = 1;
-onkeydown = d=> k[d.key] = 0;
+onkeyup = d=> k[d.key] = 0;
 
 loop();
 
