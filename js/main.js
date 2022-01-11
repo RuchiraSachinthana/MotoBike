@@ -3,7 +3,7 @@ var ctx = c.getContext("2d");
 c .width = 500;
 c.height = 350;
 c.tabindex = 0;
-c.setAttribute('style', "position: absolute;  left: 60%;margin-left:-400px; top: 25%;margin-top:50px;");
+c.setAttribute('style', "position: absolute;  left: 60%;margin-left:-400px; top: 25%; margin-top:50px;");
 document.body.appendChild(c);
 
 var perm = [];
